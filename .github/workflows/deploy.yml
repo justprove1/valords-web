@@ -21,6 +21,8 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      # GitHub Pages serves 404 for deep links in an SPA; this makes them resolve
+      - run: cp dist/index.html dist/404.html
 
       - uses: peaceiris/actions-gh-pages@v3
         with:
