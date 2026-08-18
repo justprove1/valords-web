@@ -53,8 +53,10 @@ void main(){
   float d  = distance(auv, am);
   vec2  dir = d > 0.0001 ? (auv - am) / d : vec2(0.0);
 
-  float ring = sin(d * 19.0 - uTime * 2.1) * exp(-d * 5.0);
-  vec2 disp = dir * ring * 0.026 * uHover * uAmp;
+  /* the pointer is a pool of light, not a water ripple: the picture leans
+     very slightly into it, the way glass bends what sits behind it */
+  float halo = exp(-d * d * 7.0) * uHover;
+  vec2 disp = -dir * halo * 0.013 * uAmp;
 
   /* a slow swell so the picture is never completely still */
   float n1 = fbm(vUv * 2.4 + vec2(uTime * 0.042, -uTime * 0.031));
@@ -69,7 +71,9 @@ void main(){
   else         cuv.x = (cuv.x - 0.5) * (rC / rI) + 0.5;
   cuv = clamp(cuv, 0.0005, 0.9995);
 
-  float split = (abs(ring) * uHover * 0.9 + 0.10) * 0.005 * uAmp;
+  /* colour separates only at the rim of the halo, where the bend is steepest */
+  float rim = clamp(halo * (1.0 - halo) * 4.0, 0.0, 1.0);
+  float split = (rim * 0.55 + 0.10) * 0.005 * uAmp;
   vec3 col;
   col.r = texture(uTex, clamp(cuv + dir * split, 0.0005, 0.9995)).r;
   col.g = texture(uTex, cuv).g;
@@ -78,6 +82,13 @@ void main(){
   /* entrance: the photograph surfaces from the dark, edge broken by noise */
   float edge = smoothstep(0.0, 1.0, rv * 1.5 - (1.0 - vUv.y) * 0.42 - fbm(vUv * 3.0) * 0.2);
   col = mix(vec3(0.043, 0.047, 0.041), col, clamp(edge, 0.0, 1.0));
+
+  /* light gathers where the pointer rests: a little brighter, a little warmer,
+     a little more colour — the way a room looks when the sun reaches it */
+  col *= 1.0 + halo * 0.20;
+  col += vec3(0.028, 0.019, 0.004) * halo;
+  float lum = dot(col, vec3(0.299, 0.587, 0.114));
+  col = mix(vec3(lum), col, 1.0 + halo * 0.30);
 
   float g = hash(vUv * uRes + fract(uTime));
   col += (g - 0.5) * 0.026;

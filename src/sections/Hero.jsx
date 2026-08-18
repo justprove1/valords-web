@@ -15,10 +15,10 @@ export default function Hero() {
   return (
     <section ref={ref} style={{ height: '100svh', position: 'relative', overflow: 'hidden', background: 'var(--deep)' }}>
       <motion.div style={{ position: 'absolute', inset: 0, scale, y }}>
-        {/* the photograph is live: it ripples under the pointer and drifts on its own */}
+        {/* the photograph is live: light gathers under the pointer and it drifts on its own */}
         <ShaderImage
           src={U(IMG.bcnAerial, 2600, 76)}
-          alt="Barcelona from above"
+          alt="The Eixample from above"
           amp={1}
           style={{ position: 'absolute', inset: 0 }}
         />
@@ -78,7 +78,7 @@ export default function Hero() {
         className="shell"
         style={{ position: 'absolute', left: 0, right: 0, bottom: 34, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', color: 'rgba(246,244,239,.72)', opacity: fade, pointerEvents: 'none' }}
       >
-        <p className="meta" style={{ color: 'inherit', margin: 0 }}>41.3940° N · 2.1400° E — Turó Park</p>
+        <p className="meta" style={{ color: 'inherit', margin: 0 }}>Office · 41.3940° N · 2.1400° E — Turó Park</p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <span className="meta" style={{ color: 'inherit' }}>Scroll</span>
           <motion.span
