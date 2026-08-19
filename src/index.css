@@ -394,16 +394,6 @@ select.field{appearance:none;cursor:pointer}
   .char{transform:none!important}
 }
 
-/* ── the city in relief ────────────────────────────────────────── */
-.relief{
-  position:relative;width:100%;aspect-ratio:3/2;
-  border:1px solid var(--line-gold);border-radius:2px;overflow:hidden;
-  background:radial-gradient(120% 90% at 50% 10%,#101d18 0%,#0b1310 70%);
-}
-/* the pins are the only clickable thing in the scene */
-.relief[data-over="pin"]{cursor:pointer}
-.relief--wait{opacity:.5}
-
 /* ── stacked opening ───────────────────────────────────────────── */
 /* The first screen pins and the second slides up over it. The wrapper is what
    bounds the pin: without it the sticky section would stay stuck for the whole
