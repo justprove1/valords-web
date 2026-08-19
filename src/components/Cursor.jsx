@@ -36,8 +36,11 @@ export default function Cursor() {
         className="cursor-ring"
         style={{ x: rx, y: ry, translateX: '-50%', translateY: '-50%' }}
         animate={{
-          scale: label ? 1.55 : open ? 0.92 : 0.55,
-          opacity: open ? 1 : 0.35,
+          /* idle the ring is gone, not faint: a circle trailing the pointer over
+             a photograph reads as a magnifier. It only materialises over
+             something you can actually act on. */
+          scale: label ? 1.55 : open ? 0.92 : 0.2,
+          opacity: open ? 1 : 0,
           backgroundColor: label ? 'rgba(176,141,87,1)' : 'rgba(176,141,87,0)',
           color: label ? '#0B1310' : 'rgba(176,141,87,0)',
           borderColor: label ? 'rgba(176,141,87,1)' : 'rgba(176,141,87,.5)',

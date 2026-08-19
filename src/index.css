@@ -130,7 +130,8 @@ html.lenis,html.lenis body{height:auto}
 
 .cursor{
   position:fixed;top:0;left:0;z-index:9000;pointer-events:none;
-  width:8px;height:8px;border-radius:50%;background:#fff;
+  /* small enough to sit on the photograph without becoming an object on it */
+  width:6px;height:6px;border-radius:50%;background:#fff;
   /* difference against the backdrop: legible on the dark hero and on paper,
      without the invert() that was fighting the blend and washing it out */
   mix-blend-mode:difference;
@@ -358,86 +359,46 @@ select.field{appearance:none;cursor:pointer}
   .figures{grid-template-columns:1fr}
 }
 
-/* ── the viewfinder ────────────────────────────────────────────── */
-.xray{
+/* ── the featured house ────────────────────────────────────────── */
+.feature{
   position:relative;overflow:hidden;background:var(--deep);color:var(--paper);
   height:100svh;
-  --r:clamp(140px,19vw,310px);
-  --x:56%;--y:46%;
-  --lens:radial-gradient(circle var(--r) at var(--x) var(--y),
-    #000 0%,#000 62%,rgba(0,0,0,.55) 82%,transparent 100%);
 }
+/* the frame is oversized so the slow drift never exposes an edge */
+.feature-frame{position:absolute;inset:-6% -4%;}
 
-/* outside the glass: soft, a shade cooler. Scaled up so the blur has pixels to
-   chew on at the edges instead of fading into the background. */
-.xray-soft{
-  position:absolute;inset:0;
-  filter:blur(13px) saturate(.62) brightness(.58);
-  transform:scale(1.07);
-}
-
-/* inside the glass: the same frame, sharp and magnified about the pointer, so
-   the point under the cursor stays put and everything around it opens out */
-.xray-reveal{
-  position:absolute;inset:0;
-  -webkit-mask-image:var(--lens);mask-image:var(--lens);
-}
-.xray-sharp{
-  position:absolute;inset:0;
-  transform:scale(1.22);
-  transform-origin:var(--x) var(--y);
-  filter:saturate(1.06) contrast(1.04);
-}
-
-.xray-lens{
-  position:absolute;left:var(--x);top:var(--y);
-  width:calc(var(--r) * 2);height:calc(var(--r) * 2);
-  margin-left:calc(var(--r) * -1);margin-top:calc(var(--r) * -1);
-  border-radius:50%;
-  border:1px solid rgba(235,210,160,.55);
-  box-shadow:0 0 50px rgba(8,14,11,.4) inset, 0 0 90px rgba(8,14,11,.55), 0 0 0 1px rgba(8,14,11,.3);
-  pointer-events:none;display:grid;place-items:center;
-}
-.xray-cross{
-  position:relative;width:26px;height:26px;display:block;opacity:.65;
-}
-.xray-cross::before,.xray-cross::after{
-  content:'';position:absolute;background:rgba(235,210,160,.9);
-}
-.xray-cross::before{top:50%;left:0;width:100%;height:1px}
-.xray-cross::after{left:50%;top:0;height:100%;width:1px}
-
-.xray-veil{
+/* the writing sits over the left third, so the veil is weighted there and
+   kept off the body of the house */
+.feature-veil{
   position:absolute;inset:0;pointer-events:none;
   background:
-    radial-gradient(70% 88% at 2% 50%,rgba(8,14,11,.92) 0%,rgba(8,14,11,.6) 46%,rgba(8,14,11,0) 82%),
-    linear-gradient(180deg,rgba(8,14,11,.62) 0%,rgba(8,14,11,.12) 24%,rgba(8,14,11,.12) 60%,rgba(8,14,11,.6) 100%);
+    radial-gradient(78% 92% at 0% 50%,rgba(8,14,11,.93) 0%,rgba(8,14,11,.62) 42%,rgba(8,14,11,0) 78%),
+    linear-gradient(180deg,rgba(8,14,11,.55) 0%,rgba(8,14,11,.06) 26%,rgba(8,14,11,.06) 58%,rgba(8,14,11,.62) 100%);
 }
-.xray-copy{
+.feature-copy{
   position:relative;height:100%;display:grid;align-content:center;
   pointer-events:none;max-width:min(100%,1500px);
 }
-.xray-copy a{pointer-events:auto}
+.feature-copy a{pointer-events:auto}
 
-.xray-spec{
+.feature-spec{
   list-style:none;margin:30px 0 0;padding:0;
   display:flex;gap:clamp(20px,2.6vw,42px);flex-wrap:wrap;
   border-top:1px solid var(--line-gold);padding-top:20px;max-width:34rem;
 }
-.xray-spec li{display:grid;gap:3px}
-.xray-spec span{font-family:var(--serif);font-size:clamp(24px,2.4vw,34px);line-height:1}
-.xray-spec em{
+.feature-spec li{display:grid;gap:3px}
+.feature-spec span{font-family:var(--serif);font-size:clamp(24px,2.4vw,34px);line-height:1}
+.feature-spec em{
   font-style:normal;font-size:10px;letter-spacing:.2em;text-transform:uppercase;
   color:var(--brass-hi);opacity:.75;
 }
 
-.xray-note{
+.feature-note{
   position:absolute;right:var(--gut);bottom:26px;margin:0;
   color:rgba(246,244,239,.38);font-size:10px;
 }
 @media (max-width:640px){
-  .xray-spec{gap:18px}
-  .xray-soft{filter:blur(9px) saturate(.65) brightness(.6)}
+  .feature-spec{gap:18px}
 }
 
 /* ── the city inside its own name ───────────────────────────────── */
