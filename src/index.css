@@ -360,22 +360,41 @@ select.field{appearance:none;cursor:pointer}
 }
 
 /* ── bands ─────────────────────────────────────────────────────── */
-/* Each band is a window onto the same picture. The image inside is as wide as
-   the whole strip and shifted left by the band's index, so the bands re-form
-   one frame with no seam and no stretching. */
-.slats{position:absolute;inset:0;display:flex;overflow:hidden}
+.slats{position:absolute;inset:0;display:flex;overflow:hidden;isolation:isolate}
 .slat{position:relative;flex:1 1 0;overflow:hidden;will-change:transform}
-.slat img{
-  position:absolute;top:0;left:calc(var(--i) * -100%);
-  width:calc(var(--n) * 100%);height:100%;
-  max-width:none;object-fit:cover;user-select:none;
+.slat-inner{position:absolute;inset:0;overflow:hidden;will-change:transform}
+.slat img{position:absolute;top:0;height:100%;max-width:none;object-fit:cover;user-select:none}
+
+/* one picture across every band: the image is n times the band and shifted by
+   the band's index, so the bands re-form a single frame. No horizontal margin
+   anywhere — it would offset each band's picture and break registration. */
+.slat-img--single{left:calc(var(--i) * -100%);width:calc(var(--n) * 100%)}
+
+/* a picture of its own per band */
+.slat-img--own{left:0;width:100%}
+
+/* The unifier. `color` blending keeps each photograph's light and shadow but
+   replaces its hue, so pictures from unrelated shoots settle into one palette
+   and the row reads as a composition rather than a contact sheet. */
+.slats-wash{
+  position:absolute;inset:0;pointer-events:none;z-index:2;
+  /* `color` takes its hue AND its saturation from this layer, so the gradient
+     has to be genuinely saturated. Desaturated greens here would bleach the
+     photographs instead of tinting them. */
+  mix-blend-mode:color;opacity:.72;
+  background:linear-gradient(104deg,
+    #0f4a3a 0%, #16624a 30%, #3d6b3a 58%, #a8792a 88%, #c9a227 100%);
 }
-/* No overlap between bands: the image inside each one is exactly n times the
-   band width, so any margin here would shift every band's picture by that
-   amount and the frame would stop registering. The bands only ever move on Y,
-   so they stay flush horizontally for the whole animation. */
+/* the darks deepen towards the foot of the frame, so the type has ground */
+.slats-wash::after{
+  content:'';position:absolute;inset:0;mix-blend-mode:multiply;opacity:.2;
+  background:linear-gradient(180deg,rgba(8,14,11,0) 40%,rgba(8,14,11,.85) 100%);
+}
+/* the photographs need contrast of their own before the tint lands on them,
+   or the wash has nothing but flat mid-greys to work with */
+.slats .slat img{filter:contrast(1.12) saturate(1.05) brightness(1.04)}
 @media (prefers-reduced-motion:reduce){
-  .slat{transform:none!important}
+  .slat,.slat-inner{transform:none!important}
 }
 
 /* ── the featured house ────────────────────────────────────────── */

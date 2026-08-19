@@ -1,29 +1,35 @@
 import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { EASE_CINE } from './anim';
 
 /**
- * A photograph that arrives in vertical bands.
+ * A photograph — or a row of them — that arrives in vertical bands.
  *
- * Each band carries the whole picture, shifted left by its own index and
- * clipped, so together they reassemble one seamless frame — no seams, no
- * distortion, and it works at any aspect ratio because every band relies on
- * object-fit rather than a computed background size.
+ * Two modes:
  *
- * The bands rise in sequence. Once they have landed the image is ordinary
- * again, which is the point: the movement is an entrance, not a permanent
- * effect sitting on top of the photograph.
+ *   src   one picture cut into bands that reassemble into a single frame.
+ *         Registration is exact: each band holds an image n times its own
+ *         width, shifted left by its index, and the bands carry no horizontal
+ *         margin, because any margin would shift every band's picture.
  *
- * The rhythm is deliberate — the Eixample is a grid, Barcelona shutters are
- * slatted, and the reveal borrows from both rather than from a WebGL demo.
+ *   srcs  a different picture per band — a row of addresses standing side by
+ *         side. Here the bands are free to drift against each other on scroll,
+ *         since there is no single frame left to keep registered.
  *
- * `inView` watches the container, never the bands. A band starts translated
+ * `wash` is what holds the second mode together. Photographs from different
+ * shoots never share a palette, and a strip of them reads as a contact sheet.
+ * A layer blended on `color` keeps each picture's luminance but imposes one
+ * hue over all of them, so the row reads as a single art-directed composition
+ * instead of a pile of stock. It is the one idea borrowed from the reference,
+ * and it is doing the real work.
+ *
+ * `inView` watches the container, never the bands: a band starts translated
  * clear of its own clipping parent, so observing the bands themselves would
- * mean waiting for something that has hidden itself out of view — it never
- * arrives, and the picture stays blank.
+ * mean waiting for something that has hidden itself out of view.
  */
 export default function Slats({
   src,
+  srcs,
   alt = '',
   count = 7,
   delay = 0.2,
@@ -31,6 +37,8 @@ export default function Slats({
   duration = 1.5,
   fromRight = false,
   inView = false,
+  wash = false,
+  drift = 0,
   className = '',
   style,
 }) {
@@ -38,23 +46,54 @@ export default function Slats({
   const seen = useInView(host, { once: true, margin: '-12% 0px' });
   const show = inView ? seen : true;
 
-  const bands = Array.from({ length: count }, (_, i) => i);
+  const pictures = srcs && srcs.length ? srcs : null;
+  const n = pictures ? pictures.length : count;
+  const bands = Array.from({ length: n }, (_, i) => i);
   const order = fromRight ? [...bands].reverse() : bands;
+
+  /* alternating rates, strongest at the edges and quiet in the middle, so the
+     row breathes without the centre — where the title sits — ever moving much */
+  const { scrollYProgress } = useScroll({ target: host, offset: ['start end', 'end start'] });
+  const rate = (i) => {
+    if (!drift || !pictures) return 0;
+    const mid = (n - 1) / 2;
+    return ((i - mid) / mid) * drift * (i % 2 ? -1 : 1);
+  };
 
   return (
     <div ref={host} className={`slats ${className}`} style={style} aria-hidden={alt ? undefined : true}>
       {bands.map((i) => (
-        <motion.div
+        <Band
           key={i}
-          className="slat"
-          style={{ '--i': i, '--n': count }}
-          initial={{ y: '104%' }}
-          animate={{ y: show ? 0 : '104%' }}
+          i={i}
+          n={n}
+          src={pictures ? pictures[i] : src}
+          alt={i === 0 ? alt : ''}
+          single={!pictures}
+          show={show}
+          scrollYProgress={scrollYProgress}
+          rate={rate(i)}
           transition={{ duration, ease: EASE_CINE, delay: delay + order.indexOf(i) * stagger }}
-        >
-          <img src={src} alt={i === 0 ? alt : ''} draggable="false" />
-        </motion.div>
+        />
       ))}
+      {wash && <span className="slats-wash" aria-hidden />}
     </div>
+  );
+}
+
+function Band({ i, n, src, alt, single, show, scrollYProgress, rate, transition }) {
+  const dy = useTransform(scrollYProgress, [0, 1], [rate, -rate]);
+
+  return (
+    <motion.div className="slat" style={{ '--i': i, '--n': n, y: dy }}>
+      <motion.div
+        className="slat-inner"
+        initial={{ y: '104%' }}
+        animate={{ y: show ? 0 : '104%' }}
+        transition={transition}
+      >
+        <img className={single ? 'slat-img--single' : 'slat-img--own'} src={src} alt={alt} draggable="false" />
+      </motion.div>
+    </motion.div>
   );
 }

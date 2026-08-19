@@ -4,6 +4,14 @@ import { U, IMG } from '../data/images';
 import { EASE, EASE_CINE } from '../lib/anim';
 import Slats from '../lib/Slats';
 
+/* Read left to right: the grid from above, then the architecture that fills it,
+   then the light inside it. Ordered so the tonal weight sits at the edges and
+   the quietest frames fall behind the title. */
+const HERO_BANDS = [
+  IMG.lines, IMG.bcnAerial, IMG.facadeWhite, IMG.minimal,
+  IMG.glass1, IMG.bcnGaudi, IMG.stair,
+];
+
 export default function Hero() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
@@ -20,14 +28,16 @@ export default function Hero() {
   return (
     <section ref={ref} style={{ height: '100svh', position: 'relative', overflow: 'hidden', background: 'var(--deep)' }}>
       <motion.div style={{ position: 'absolute', inset: 0, scale, y }}>
-        {/* the city arrives in bands, then behaves like an ordinary photograph */}
+        {/* Seven views of the upper city standing side by side, held together by
+            a single wash — one composition, not a strip of stock. */}
         <Slats
-          src={U(IMG.bcnAerial, 2600, 76)}
-          alt="The Eixample from above"
-          count={7}
+          srcs={HERO_BANDS.map((id) => U(id, 1400, 76))}
+          alt="Barcelona — the upper city"
           delay={0.15}
           stagger={0.085}
           duration={1.6}
+          drift={26}
+          wash
         />
         <div style={{ pointerEvents: 'none', position: 'absolute', inset: 0, background: 'linear-gradient(94deg, rgba(8,14,11,.8) 0%, rgba(8,14,11,.5) 38%, rgba(8,14,11,.1) 72%, rgba(8,14,11,.36) 100%)' }} />
         <div style={{ pointerEvents: 'none', position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(8,14,11,.44) 0%, rgba(8,14,11,0) 26%, rgba(8,14,11,0) 60%, rgba(8,14,11,.56) 100%)' }} />
