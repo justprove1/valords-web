@@ -396,7 +396,7 @@ select.field{appearance:none;cursor:pointer}
 
 /* ── the city in relief ────────────────────────────────────────── */
 .relief{
-  position:relative;width:100%;aspect-ratio:1000/620;
+  position:relative;width:100%;aspect-ratio:3/2;
   border:1px solid var(--line-gold);border-radius:2px;overflow:hidden;
   background:radial-gradient(120% 90% at 50% 10%,#101d18 0%,#0b1310 70%);
 }

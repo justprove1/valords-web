@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import {
+  ACESFilmicToneMapping,
   AmbientLight, BufferAttribute, Color, DirectionalLight, Group, Mesh,
   MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, Scene, SphereGeometry,
   MeshBasicMaterial, WebGLRenderer, Raycaster, Vector2, LineBasicMaterial,
@@ -29,14 +30,47 @@ const P0 = [0.160, 1.000];
 const N = [-0.523, -0.852];   // unit normal, pointing inland
 const MAX_D = 0.937;          // distance at the far inland corner
 
+const smoothstep = (a, b, x) => {
+  const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
+  return t * t * (3 - 2 * t);
+};
+const bump = (u, v, cu, cv, r) =>
+  Math.exp(-(((u - cu) ** 2 + (v - cv) ** 2) / (2 * r * r)));
+
+/**
+ * The city is not a slope.
+ *
+ * A single curve on the distance from the coast produces a tilted sheet, which
+ * is what this was and what it looked like. Barcelona is a nearly flat plain
+ * running back from the water, and then Collserola standing up hard behind it
+ * — plus Montjuïc sitting on its own beside the port. Four terms, then:
+ *
+ *   plain    the long gentle rise the Eixample is built on
+ *   ridge    the sierra, held off until halfway and then climbing steeply
+ *   Tibidabo the peak on the ridge, at its real position
+ *   Montjuïc an isolated hill by the water, likewise
+ *
+ * Erosion rides on the ridge alone, because water carves mountains and not
+ * city blocks — and because when it rode on everything it lifted Turó Park
+ * above Pedralbes, which is the wrong way round on the ground.
+ *
+ * The six centroids come out Sarrià .195, Pedralbes .161, Turó Park .143,
+ * Eixample .118, Passeig de Gràcia .073, Ciutat Vella .002. Real order, real
+ * price order, from coordinates that were already in the file. A quarter of
+ * the plate is below the waterline.
+ */
 export function elevation(u, v) {
   const d = (u - P0[0]) * N[0] + (v - P0[1]) * N[1];
   const k = Math.max(0, Math.min(1, d / MAX_D));
-  /* the plain is flat near the water and rises hard at the ridge */
-  const base = Math.pow(k, 1.7);
-  /* two long folds so the ridge is not a smooth ramp — Collserola has valleys */
-  const fold = Math.sin(u * 7.3 + v * 2.1) * 0.014 + Math.sin(v * 9.1 - u * 3.4) * 0.010;
-  return base + fold * k;
+
+  const ridge = smoothstep(0.48, 0.96, k);
+  let h = smoothstep(0.02, 0.50, k) * 0.17 + Math.pow(ridge, 1.3) * 0.86;
+
+  h += bump(u, v, 0.35, 0.00, 0.115) * 0.26;   // Tibidabo
+  h += bump(u, v, 0.72, 0.817, 0.062) * 0.34;  // Montjuïc
+
+  h += (Math.sin(u * 11 + v * 4) * 0.5 + Math.sin(v * 13 - u * 6) * 0.5) * 0.075 * ridge;
+  return Math.max(0, h);
 }
 
 export default function CityRelief({ points = [], active, onPick, onFail }) {
@@ -51,7 +85,12 @@ export default function CityRelief({ points = [], active, onPick, onFail }) {
 
     let renderer;
     try {
-      renderer = new WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      renderer = new WebGLRenderer({
+        antialias: true, alpha: true, powerPreference: 'high-performance',
+        /* only in dev: keeping the drawing buffer lets the scene be read back
+           and inspected, which costs performance and is never shipped */
+        preserveDrawingBuffer: import.meta.env.DEV,
+      });
       if (!renderer.getContext()) throw new Error('no context');
     } catch {
       onFail?.();
@@ -60,15 +99,24 @@ export default function CityRelief({ points = [], active, onPick, onFail }) {
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    /* three lights physically since r155: without tone mapping a dark green
+       terrain under a single key light clips to near-black mud */
+    renderer.toneMapping = ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.7;
     el.appendChild(renderer.domElement);
     renderer.domElement.style.cssText = 'width:100%;height:100%;display:block';
 
     const scene = new Scene();
-    scene.fog = new FogExp2(new Color('#0b1310'), 0.55);
+    scene.fog = new FogExp2(new Color('#0b1310'), 0.14);
 
-    const camera = new PerspectiveCamera(34, 1, 0.1, 20);
-    camera.position.set(0, 1.06, 1.42);
-    camera.lookAt(0, 0.06, 0);
+    const camera = new PerspectiveCamera(32, 1, 0.1, 20);
+    /* A landform only reads at a raking angle — from overhead it is a texture.
+       ~20 degrees above the horizon silhouettes the ridge against the ground.
+       The distance is not eyeballed: the plate is 1.6 wide, the horizontal half
+       angle here has a tangent of 0.462, so the near edge needs 1.73 of depth
+       for the full width to fit — hence 0.575 + 1.73. */
+    camera.position.set(0, 0.82, 2.32);
+    camera.lookAt(0, 0.235, -0.02);
 
     const world = new Group();
     world.rotation.x = -0.06;
@@ -77,7 +125,11 @@ export default function CityRelief({ points = [], active, onPick, onFail }) {
     /* ── terrain ─────────────────────────────────────────────────── */
     const geo = new PlaneGeometry(1.6, 1.15, SEG, SEG);
     const pos = geo.attributes.position;
-    const HEIGHT = 0.42;
+    /* elevation() now peaks at ~1.07 at Tibidabo against a plain around 0.10, so
+       this scales the whole landform rather than merely tilting it. Relief
+       plates are always vertically exaggerated; a true-scale Collserola is a
+       1:16 slope and reads as nothing. */
+    const HEIGHT = 0.5;
     for (let i = 0; i < pos.count; i++) {
       const u = pos.getX(i) / 1.6 + 0.5;
       const v = 0.5 - pos.getY(i) / 1.15;
@@ -88,7 +140,7 @@ export default function CityRelief({ points = [], active, onPick, onFail }) {
 
     const land = new Mesh(
       geo,
-      new MeshStandardMaterial({ color: new Color('#16241d'), roughness: 0.92, metalness: 0.04, flatShading: false })
+      new MeshStandardMaterial({ color: new Color('#4c6d57'), roughness: 0.8, metalness: 0.04, emissive: new Color('#16241d'), emissiveIntensity: 0.5 })
     );
     world.add(land);
 
@@ -97,13 +149,30 @@ export default function CityRelief({ points = [], active, onPick, onFail }) {
     const wire = contours(geo, 4);
     const lines = new LineSegments(
       wire,
-      new LineBasicMaterial({ color: new Color('#b08d57'), transparent: true, opacity: 0.16 })
+      new LineBasicMaterial({ color: new Color('#e2c46a'), transparent: true, opacity: 0.34 })
     );
     lines.position.y = 0.002;
     world.add(lines);
 
+    /* The Mediterranean. elevation() clamps to zero on the seaward side of the
+       coast line, so a flat plate a hair above zero floods precisely that area
+       and the coastline draws itself out of the geometry. */
+    const seaGeo = new PlaneGeometry(3.4, 3.4);
+    seaGeo.rotateX(-Math.PI / 2);
+    const sea = new Mesh(
+      seaGeo,
+      new MeshStandardMaterial({
+        color: new Color('#17525d'), roughness: 0.42, metalness: 0.2,
+        /* a metal with no environment to reflect renders black, and the sea
+           was reading as a hole punched in the plate */
+        emissive: new Color('#0c3038'), emissiveIntensity: 0.8,
+      })
+    );
+    sea.position.y = 0.006;
+    world.add(sea);
+
     /* ── the six addresses ───────────────────────────────────────── */
-    const dot = new SphereGeometry(0.012, 18, 18);
+    const dot = new SphereGeometry(0.016, 18, 18);
     const markers = points.map((p) => {
       const m = new Mesh(dot, new MeshBasicMaterial({ color: new Color('#e8cf9a') }));
       m.position.set(
@@ -116,11 +185,11 @@ export default function CityRelief({ points = [], active, onPick, onFail }) {
       return m;
     });
 
-    scene.add(new AmbientLight(0xffffff, 0.5));
-    const key = new DirectionalLight(0xfff2d8, 2.1);
+    scene.add(new AmbientLight(0xdfeee6, 1.8));
+    const key = new DirectionalLight(0xfff2d8, 3.6);
     key.position.set(-1.1, 1.5, 0.7);
     scene.add(key);
-    const rim = new DirectionalLight(0x8fb3a4, 0.7);
+    const rim = new DirectionalLight(0x8fb3a4, 1.2);
     rim.position.set(1.2, 0.4, -0.9);
     scene.add(rim);
 
@@ -224,6 +293,8 @@ export default function CityRelief({ points = [], active, onPick, onFail }) {
       markers.forEach((m) => m.material.dispose());
       dot.dispose();
       geo.dispose();
+      seaGeo.dispose();
+      sea.material.dispose();
       wire.dispose();
       land.material.dispose();
       lines.material.dispose();
