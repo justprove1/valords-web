@@ -1,8 +1,9 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { U, IMG } from '../data/images';
 import { EASE, EASE_CINE } from '../lib/anim';
 import Slats from '../lib/Slats';
+import Chars from '../components/Chars';
 
 /* Read left to right: the grid from above, then the architecture that fills it,
    then the light inside it. Ordered so the tonal weight sits at the edges and
@@ -14,7 +15,20 @@ const HERO_BANDS = [
 
 export default function Hero() {
   const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+  /* Once the section is pinned its own rect stops moving, so an element-based
+     measurement would freeze at zero and the three planes would never travel.
+     The hero sits at the top of the document, so window scroll over one
+     viewport height is the same range, and it keeps working while pinned. */
+  const { scrollY } = useScroll();
+  const [vh, setVh] = useState(0);
+  useEffect(() => {
+    const sync = () => setVh(window.innerHeight);
+    sync();
+    window.addEventListener('resize', sync);
+    return () => window.removeEventListener('resize', sync);
+  }, []);
+  const span = vh || 1;
+  const scrollYProgress = useTransform(scrollY, [0, span], [0, 1], { clamp: true });
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.22]);
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '14%']);
   const dim = useTransform(scrollYProgress, [0, 1], [0, 0.5]);
@@ -26,7 +40,7 @@ export default function Hero() {
   const footY = useTransform(scrollYProgress, [0, 1], [0, -54]);
 
   return (
-    <section ref={ref} style={{ height: '100svh', position: 'relative', overflow: 'hidden', background: 'var(--deep)' }}>
+    <section ref={ref} className="hero" style={{ height: '100svh', overflow: 'hidden', background: 'var(--deep)' }}>
       <motion.div style={{ position: 'absolute', inset: 0, scale, y }}>
         {/* Seven views of the upper city standing side by side, held together by
             a single wash — one composition, not a strip of stock. */}
@@ -58,28 +72,23 @@ export default function Hero() {
           Remarkable realty · Est. 2016
         </motion.p>
 
-        <span className="mask">
-          <motion.span
-            className="display d-xl foil"
-            style={{ display: 'block', letterSpacing: '.02em' }}
-            initial={{ y: '112%' }}
-            animate={{ y: 0 }}
-            transition={{ duration: 1.6, ease: EASE_CINE, delay: 0.35 }}
-          >
-            VALORDS
-          </motion.span>
-        </span>
-        <span className="mask" style={{ marginTop: 4 }}>
-          <motion.span
-            className="display d-md italic"
-            style={{ display: 'block', color: 'rgba(246,244,239,.88)' }}
-            initial={{ y: '112%' }}
-            animate={{ y: 0 }}
-            transition={{ duration: 1.6, ease: EASE_CINE, delay: 0.52 }}
-          >
-            Barcelona
-          </motion.span>
-        </span>
+        <Chars
+          text="VALORDS"
+          className="display d-xl"
+          style={{ letterSpacing: '.02em' }}
+          foil
+          delay={0.35}
+          stagger={0.045}
+          duration={1.4}
+        />
+        <Chars
+          text="Barcelona"
+          className="display d-md italic"
+          style={{ marginTop: 4, color: 'rgba(246,244,239,.88)' }}
+          delay={0.62}
+          stagger={0.035}
+          duration={1.3}
+        />
         <motion.p
           className="lead"
           style={{ color: 'rgba(246,244,239,.88)', marginTop: 30, maxWidth: '30ch' }}

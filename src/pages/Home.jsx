@@ -16,8 +16,12 @@ import { NEIGHBOURHOODS } from '../data/properties';
 export default function Home() {
   return (
     <>
-      <Hero />
-      <Interior />
+      {/* the city pins and the house rides up over it, so the two opening
+          screens read as one move instead of two sections in a list */}
+      <div className="stack">
+        <Hero />
+        <Interior />
+      </div>
 
       <section className="shell" style={{ paddingBlock: 'clamp(90px,15vh,200px)' }}>
         <div className="intro-grid">

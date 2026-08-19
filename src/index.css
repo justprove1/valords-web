@@ -359,6 +359,37 @@ select.field{appearance:none;cursor:pointer}
   .figures{grid-template-columns:1fr}
 }
 
+/* ── type that assembles ───────────────────────────────────────── */
+.chars{display:inline-flex;flex-wrap:wrap}
+/* each letter needs its own clipping box, and the box must sit on the text
+   baseline or descenders would be sliced off */
+.char-mask{display:inline-block;overflow:hidden;vertical-align:bottom;line-height:inherit}
+.char{display:inline-block;will-change:transform}
+.char-space{display:inline-block}
+
+/* Brass across a split word. The gradient is sized to the whole word and each
+   letter shifts it back by its own offset, so the sweep is continuous instead
+   of restarting inside every character. 2.6 matches the 260% the unsplit
+   .foil uses. */
+.chars--foil .char{
+  background-image:var(--foil);
+  background-size:calc(var(--foil-w,100%) * 2.6) 100%;
+  background-position:calc(var(--char-x,0px) * -1) 0;
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;
+}
+@media (prefers-reduced-motion:reduce){
+  .char{transform:none!important}
+}
+
+/* ── stacked opening ───────────────────────────────────────────── */
+/* The first screen pins and the second slides up over it. The wrapper is what
+   bounds the pin: without it the sticky section would stay stuck for the whole
+   document instead of releasing when the house has covered it. */
+.stack{position:relative}
+.stack > .hero{position:sticky;top:0;z-index:0}
+.stack > .feature{position:relative;z-index:1}
+
 /* ── bands ─────────────────────────────────────────────────────── */
 .slats{position:absolute;inset:0;display:flex;overflow:hidden;isolation:isolate}
 .slat{position:relative;flex:1 1 0;overflow:hidden;will-change:transform}
