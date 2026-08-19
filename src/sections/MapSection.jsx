@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Suspense, lazy, useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { NEIGHBOURHOODS, PROPERTIES } from '../data/properties';
@@ -7,6 +7,11 @@ import { EASE } from '../lib/anim';
 import { Lines } from '../components/Reveal';
 import Magnetic from '../components/Magnetic';
 import { useT } from '../i18n';
+
+/* three.js is ~150kB gzipped — far too much to sit in the entry chunk for a
+   section most visitors reach only after several screens. Split out, it is
+   fetched while they are still reading the ones above. */
+const CityRelief = lazy(() => import('../lib/CityRelief'));
 
 /* A schematic of the city, not a survey: the sea, the ridge, the Diagonal and
    the six addresses, projected from their real coordinates so the relative
@@ -38,6 +43,18 @@ const line = (pts) => pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${
 export default function MapSection() {
   const t = useT();
   const [active, setActive] = useState('turo-park');
+  /* the relief is the drawing; the flat schematic stays as the fallback for
+     machines without WebGL, so the section never loses its content */
+  const [flat, setFlat] = useState(false);
+
+  const reliefPoints = useMemo(
+    () => NEIGHBOURHOODS.map((n) => {
+      const [lat, lng] = CENTRES[n.slug];
+      return { slug: n.slug, u: (lng - LNG0) / (LNG1 - LNG0), v: (LAT0 - lat) / (LAT0 - LAT1) };
+    }),
+    []
+  );
+  const onFail = useCallback(() => setFlat(true), []);
   const hood = NEIGHBOURHOODS.find((n) => n.slug === active) ?? NEIGHBOURHOODS[0];
   const homes = PROPERTIES.filter((p) => p.hoodSlug === active);
 
@@ -53,6 +70,12 @@ export default function MapSection() {
 
         <div className="map-grid">
           <div>
+            {!flat && (
+              <Suspense fallback={<div className="relief relief--wait" aria-hidden />}>
+                <CityRelief points={reliefPoints} active={active} onPick={setActive} onFail={onFail} />
+              </Suspense>
+            )}
+            {flat && (
             <svg className="map-svg" viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Schematic map of Barcelona with the six neighbourhoods">
               <defs>
                 <pattern id="eix" width="26" height="26" patternUnits="userSpaceOnUse" patternTransform="rotate(-27)">
@@ -150,6 +173,7 @@ export default function MapSection() {
                 );
               })}
             </svg>
+            )}
           </div>
 
           <aside className="map-aside">
