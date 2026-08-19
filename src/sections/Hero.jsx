@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { U, IMG } from '../data/images';
 import { EASE, EASE_CINE } from '../lib/anim';
-import ShaderImage from '../lib/ShaderImage';
+import Slats from '../lib/Slats';
 
 export default function Hero() {
   const ref = useRef(null);
@@ -20,12 +20,14 @@ export default function Hero() {
   return (
     <section ref={ref} style={{ height: '100svh', position: 'relative', overflow: 'hidden', background: 'var(--deep)' }}>
       <motion.div style={{ position: 'absolute', inset: 0, scale, y }}>
-        {/* the photograph is live: light gathers under the pointer and it drifts on its own */}
-        <ShaderImage
+        {/* the city arrives in bands, then behaves like an ordinary photograph */}
+        <Slats
           src={U(IMG.bcnAerial, 2600, 76)}
           alt="The Eixample from above"
-          amp={1}
-          style={{ position: 'absolute', inset: 0 }}
+          count={7}
+          delay={0.15}
+          stagger={0.085}
+          duration={1.6}
         />
         <div style={{ pointerEvents: 'none', position: 'absolute', inset: 0, background: 'linear-gradient(94deg, rgba(8,14,11,.8) 0%, rgba(8,14,11,.5) 38%, rgba(8,14,11,.1) 72%, rgba(8,14,11,.36) 100%)' }} />
         <div style={{ pointerEvents: 'none', position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(8,14,11,.44) 0%, rgba(8,14,11,0) 26%, rgba(8,14,11,0) 60%, rgba(8,14,11,.56) 100%)' }} />

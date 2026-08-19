@@ -5,7 +5,7 @@ import { PROPERTIES, fmtPrice } from '../data/properties';
 import { U } from '../data/images';
 import { EASE } from '../lib/anim';
 import Magnetic from '../components/Magnetic';
-import ShaderImage from '../lib/ShaderImage';
+import Slats from '../lib/Slats';
 
 const P = PROPERTIES[0];
 
@@ -43,11 +43,14 @@ export default function Interior() {
   return (
     <section ref={ref} className="feature">
       <motion.div className="feature-frame" style={{ scale, y }}>
-        <ShaderImage
+        <Slats
           src={U(P.cover, 2600, 82)}
           alt={`${P.title}, ${P.hood}`}
-          amp={0.55}
-          style={{ position: 'absolute', inset: 0 }}
+          count={6}
+          delay={0}
+          stagger={0.07}
+          duration={1.35}
+          inView
         />
       </motion.div>
 

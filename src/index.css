@@ -359,6 +359,25 @@ select.field{appearance:none;cursor:pointer}
   .figures{grid-template-columns:1fr}
 }
 
+/* ── bands ─────────────────────────────────────────────────────── */
+/* Each band is a window onto the same picture. The image inside is as wide as
+   the whole strip and shifted left by the band's index, so the bands re-form
+   one frame with no seam and no stretching. */
+.slats{position:absolute;inset:0;display:flex;overflow:hidden}
+.slat{position:relative;flex:1 1 0;overflow:hidden;will-change:transform}
+.slat img{
+  position:absolute;top:0;left:calc(var(--i) * -100%);
+  width:calc(var(--n) * 100%);height:100%;
+  max-width:none;object-fit:cover;user-select:none;
+}
+/* No overlap between bands: the image inside each one is exactly n times the
+   band width, so any margin here would shift every band's picture by that
+   amount and the frame would stop registering. The bands only ever move on Y,
+   so they stay flush horizontally for the whole animation. */
+@media (prefers-reduced-motion:reduce){
+  .slat{transform:none!important}
+}
+
 /* ── the featured house ────────────────────────────────────────── */
 .feature{
   position:relative;overflow:hidden;background:var(--deep);color:var(--paper);
