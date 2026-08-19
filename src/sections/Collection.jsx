@@ -6,11 +6,13 @@ import { PROPERTIES, fmtPrice } from '../data/properties';
 import { U } from '../data/images';
 import { Lines, FadeUp } from '../components/Reveal';
 import { EASE } from '../lib/anim';
+import { useI18n } from '../i18n';
 
 const PICKS = [PROPERTIES[6], PROPERTIES[1], PROPERTIES[8], PROPERTIES[9]];
 
 /* Each piece gets its own editorial treatment — nothing repeats. */
 function Piece({ p, layout }) {
+  const { t, lang } = useI18n();
   const ref = useRef(null);
   const imgRef = useRef(null);
   const { expand } = useExpand();
@@ -20,12 +22,12 @@ function Piece({ p, layout }) {
 
   const Label = (
     <div>
-      <p className="meta num" style={{ margin: 0 }}>Collection Nº {p.ref}</p>
+      <p className="meta num" style={{ margin: 0 }}>{t('collection.eyebrow')} Nº {p.ref}</p>
       <h3 className="display d-md" style={{ marginTop: 14 }}>{p.hood}</h3>
       <p className="meta" style={{ marginTop: 10 }}>Barcelona</p>
-      <p className="display d-sm num" style={{ marginTop: 26 }}>{fmtPrice(p.price)}</p>
+      <p className="display d-sm num" style={{ marginTop: 26 }}>{fmtPrice(p.price, lang)}</p>
       <p className="lead" style={{ marginTop: 20, maxWidth: '30ch', color: 'var(--warm)' }}>{p.lede}</p>
-      <button className="btn" style={{ marginTop: 30 }} onClick={open}>Open the file</button>
+      <button className="btn" style={{ marginTop: 30 }} onClick={open}>{t('feature.open')}</button>
     </div>
   );
 
@@ -37,10 +39,10 @@ function Piece({ p, layout }) {
             <motion.img src={U(p.cover, 2400, 74)} alt={p.title} loading="lazy" className="img-cover" style={{ y, scale: 1.1 }} />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(12,12,10,.34),rgba(12,12,10,0) 42%,rgba(12,12,10,.6))' }} />
             <div className="shell" style={{ position: 'absolute', inset: 0, display: 'grid', alignContent: 'space-between', paddingBlock: 44, color: 'var(--paper)', textAlign: 'left' }}>
-              <p className="meta num" style={{ color: 'rgba(246,244,239,.8)' }}>Collection Nº {p.ref}</p>
+              <p className="meta num" style={{ color: 'rgba(246,244,239,.8)' }}>{t('collection.eyebrow')} Nº {p.ref}</p>
               <div>
                 <h3 className="display d-lg">{p.hood}</h3>
-                <p className="num" style={{ marginTop: 10, fontSize: 15 }}>{fmtPrice(p.price)} · {p.size} m²</p>
+                <p className="num" style={{ marginTop: 10, fontSize: 15 }}>{fmtPrice(p.price, lang)} · {p.size} m²</p>
               </div>
             </div>
           </div>
@@ -91,12 +93,13 @@ function Piece({ p, layout }) {
 }
 
 export default function CollectionSection() {
+  const { t, lang } = useI18n();
   return (
     <section id="collection" style={{ background: 'var(--paper-2)', paddingBlock: 'clamp(90px,13vh,180px)' }}>
       <div className="shell" style={{ marginBottom: 'clamp(50px,8vh,110px)' }}>
         <p className="eyebrow">Private collection</p>
         <h2 className="display d-lg" style={{ marginTop: 22, maxWidth: '13ch' }}>
-          <Lines lines={['The Barcelona', 'Collection']} />
+          <Lines lines={[t('collection.l1'), t('collection.l2')]} />
         </h2>
         <FadeUp i={1}>
           <p className="lead" style={{ marginTop: 26, maxWidth: '44ch', color: 'var(--warm)' }}>

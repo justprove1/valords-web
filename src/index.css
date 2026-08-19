@@ -359,6 +359,18 @@ select.field{appearance:none;cursor:pointer}
   .figures{grid-template-columns:1fr}
 }
 
+/* ── language switch ───────────────────────────────────────────── */
+.langs{display:flex;align-items:center;gap:2px;margin-left:6px}
+.lang{
+  font-size:10px;letter-spacing:.14em;padding:6px 7px;line-height:1;
+  color:inherit;opacity:.42;transition:opacity .4s var(--ease),color .4s var(--ease);
+  border-radius:2px;
+}
+.lang:hover{opacity:.8}
+.lang.is-on{opacity:1;color:var(--brass-lo)}
+.lang.is-on.is-light{color:var(--brass-hi)}
+.lang:not(:last-child)::after{content:'';display:inline-block}
+
 /* ── type that assembles ───────────────────────────────────────── */
 .chars{display:inline-flex;flex-wrap:wrap}
 /* each letter needs its own clipping box, and the box must sit on the text

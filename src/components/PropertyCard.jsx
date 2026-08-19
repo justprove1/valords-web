@@ -4,12 +4,14 @@ import { useExpand } from '../lib/Transition';
 import { U } from '../data/images';
 import { fmtPrice } from '../data/properties';
 import { EASE } from '../lib/anim';
+import { useI18n } from '../i18n';
 
 /**
  * The card leans towards the pointer, catches a soft highlight, and swaps to a
  * second photograph on hover — so a grid of them never reads as flat stock.
  */
 export default function PropertyCard({ p, index, ratio = '4 / 5', parallax = 40 }) {
+  const { t, lang } = useI18n();
   const box = useRef(null);
   const img = useRef(null);
   const { expand } = useExpand();
@@ -89,10 +91,10 @@ export default function PropertyCard({ p, index, ratio = '4 / 5', parallax = 40 
             <p className="meta" style={{ margin: 0 }}>{p.hood}</p>
             <h3 className="display d-sm" style={{ marginTop: 6 }}>{p.title}</h3>
           </div>
-          <p className="num" style={{ margin: 0, fontSize: 15, whiteSpace: 'nowrap' }}>{fmtPrice(p.price)}</p>
+          <p className="num" style={{ margin: 0, fontSize: 15, whiteSpace: 'nowrap' }}>{fmtPrice(p.price, lang)}</p>
         </div>
         <p className="meta num" style={{ marginTop: 10, fontSize: 11 }}>
-          {p.size} m² · {p.beds} bedrooms · {p.baths} baths
+          {p.size} m² · {p.beds} {t('feature.beds')} · {p.baths} {t('feature.baths')}
         </p>
       </button>
     </motion.article>

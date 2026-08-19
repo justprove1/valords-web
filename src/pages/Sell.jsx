@@ -4,10 +4,12 @@ import { NEIGHBOURHOODS, TYPES, FEATURES } from '../data/properties';
 import { U, IMG } from '../data/images';
 import { EASE } from '../lib/anim';
 import ShaderImage from '../lib/ShaderImage';
+import { useT } from '../i18n';
 
 const STEPS = ['Location', 'Type', 'Surface', 'Character', 'Contact'];
 
 export default function Sell() {
+  const t = useT();
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
   const [f, setF] = useState({
@@ -38,7 +40,7 @@ export default function Sell() {
         <div style={{ maxWidth: 620, width: '100%' }}>
           <p className="eyebrow">Valuation</p>
           <h1 className="display d-md" style={{ marginTop: 18, maxWidth: '15ch' }}>
-            Discover the value of your property.
+            {t('sell.d1')} {t('sell.d2')} {t('sell.d3')}
           </h1>
 
           <div style={{ display: 'flex', gap: 8, marginTop: 44, alignItems: 'center' }}>

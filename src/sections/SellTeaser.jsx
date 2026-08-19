@@ -2,9 +2,11 @@ import { useLayoutEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { U, IMG } from '../data/images';
+import { useT } from '../i18n';
 
 /* GSAP is used here for the line-draw + word stagger tied to scroll. */
 export default function SellTeaser() {
+  const t = useT();
   const root = useRef(null);
 
   useLayoutEffect(() => {
@@ -35,7 +37,7 @@ export default function SellTeaser() {
     return () => ctx.revert();
   }, []);
 
-  const steps = ['Location', 'Type', 'Surface', 'Character', 'Contact'];
+  const steps = [t('sell.step.location'), t('sell.step.type'), t('sell.step.surface'), t('sell.step.character'), t('sell.step.contact')];
 
   return (
     <section id="sell" ref={root} className="section" style={{ background: 'var(--paper)' }}>
@@ -43,7 +45,7 @@ export default function SellTeaser() {
         <div>
           <p className="eyebrow">For owners</p>
           <h2 className="display d-lg" style={{ marginTop: 22, maxWidth: '11ch' }}>
-            {['Discover', 'the value of', 'your property.'].map((w) => (
+            {[t('sell.d1'), t('sell.d2'), t('sell.d3')].map((w) => (
               <span className="mask" key={w}><span className="sell-word" style={{ display: 'block' }}>{w}</span></span>
             ))}
           </h2>

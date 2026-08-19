@@ -5,10 +5,12 @@ import { PROPERTIES, fmtPrice } from '../data/properties';
 import { U } from '../data/images';
 import { EASE } from '../lib/anim';
 import { Lines } from '../components/Reveal';
+import { useI18n } from '../i18n';
 
 const SET = PROPERTIES.slice(0, 5);
 
 function Slide({ p, i, total }) {
+  const { t, lang } = useI18n();
   const ref = useRef(null);
   const imgRef = useRef(null);
   const { expand } = useExpand();
@@ -48,9 +50,9 @@ function Slide({ p, i, total }) {
         <p className="lead" style={{ marginTop: 22, maxWidth: '30ch', color: 'var(--warm)' }}>{p.lede}</p>
 
         <p className="num" style={{ marginTop: 30, fontSize: 14, letterSpacing: '.04em' }}>
-          {p.size} m² · {p.beds} bedrooms
+          {p.size} m² · {p.beds} {t('feature.beds')}
         </p>
-        <p className="display d-sm num" style={{ marginTop: 8 }}>{fmtPrice(p.price)}</p>
+        <p className="display d-sm num" style={{ marginTop: 8 }}>{fmtPrice(p.price, lang)}</p>
 
         <button
           className="btn"
@@ -65,11 +67,12 @@ function Slide({ p, i, total }) {
 }
 
 export default function Gallery() {
+  const { t, lang } = useI18n();
   return (
     <section id="gallery" className="section shell" style={{ background: 'var(--paper)' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 30, flexWrap: 'wrap', marginBottom: 'clamp(50px,8vh,110px)' }}>
         <h2 className="display d-lg" style={{ maxWidth: '12ch' }}>
-          <Lines lines={['Living', 'Gallery']} />
+          <Lines lines={[t('gallery.l1'), t('gallery.l2')]} />
         </h2>
         <p className="lead" style={{ maxWidth: '32ch', color: 'var(--warm)' }}>
           Five homes, shown one at a time — the way they deserve to be seen.

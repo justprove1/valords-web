@@ -3,18 +3,42 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { EASE } from '../lib/anim';
 import Magnetic from './Magnetic';
+import { useI18n } from '../i18n';
 
 const LINKS = [
-  { to: '/collection', label: 'Collection' },
-  { to: '/barcelona', label: 'Barcelona' },
-  { to: '/contact', label: 'Contact' },
+  { to: '/collection', key: 'nav.collection' },
+  { to: '/barcelona', key: 'nav.barcelona' },
+  { to: '/contact', key: 'nav.contact' },
 ];
+
+/* Sits in the bar rather than behind a globe icon: for an agency whose
+   clientele is half international, the languages are a claim, not a setting. */
+function LangSwitch({ light }) {
+  const { lang, setLang, langs, t } = useI18n();
+  return (
+    <div className="langs" role="group" aria-label={t('nav.language')}>
+      {langs.map((l) => (
+        <button
+          key={l.code}
+          type="button"
+          onClick={() => setLang(l.code)}
+          aria-label={l.name}
+          aria-current={l.code === lang ? 'true' : undefined}
+          className={`lang ${l.code === lang ? 'is-on' : ''} ${light ? 'is-light' : ''}`}
+        >
+          {l.label}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export default function Nav() {
   const [solid, setSolid] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [menu, setMenu] = useState(false);
   const { pathname } = useLocation();
+  const { t } = useI18n();
   const overHero = pathname === '/' || pathname.startsWith('/property/');
 
   useEffect(() => {
@@ -62,7 +86,7 @@ export default function Nav() {
         <nav style={{ display: 'flex', gap: 34, alignItems: 'center' }} className="nav-desktop">
           {LINKS.map((l) => (
             <NavLink key={l.to} to={l.to} className="ul" style={{ fontSize: 12, letterSpacing: '.16em', textTransform: 'uppercase' }}>
-              {l.label}
+              {t(l.key)}
             </NavLink>
           ))}
           <Magnetic strength={0.28}>
@@ -76,12 +100,13 @@ export default function Nav() {
                 transition: 'color .8s var(--ease)',
               }}
             >
-              Valuation
+              {t('nav.valuation')}
             </Link>
           </Magnetic>
+          <LangSwitch light={light && !menu} />
         </nav>
 
-        <button className="nav-burger" onClick={() => setMenu((m) => !m)} aria-label="Menu"
+        <button className="nav-burger" onClick={() => setMenu((m) => !m)} aria-label={t('nav.menu')}
           style={{ display: 'none', flexDirection: 'column', gap: 6, width: 26 }}>
           <motion.span animate={{ rotate: menu ? 45 : 0, y: menu ? 4 : 0 }} style={{ height: 1, background: 'currentColor', display: 'block' }} />
           <motion.span animate={{ rotate: menu ? -45 : 0, y: menu ? -3 : 0 }} style={{ height: 1, background: 'currentColor', display: 'block' }} />
@@ -97,17 +122,18 @@ export default function Nav() {
             transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
             style={{ position: 'fixed', inset: 0, zIndex: 5900, background: 'var(--paper)', display: 'grid', alignContent: 'center', paddingInline: 'var(--gut)' }}
           >
-            {[...LINKS, { to: '/sell', label: 'Sell' }].map((l, i) => (
+            {[...LINKS, { to: '/sell', key: 'nav.sell' }].map((l, i) => (
               <span className="mask" key={l.to}>
                 <motion.span
                   initial={{ y: '110%' }} animate={{ y: 0 }} exit={{ y: '110%' }}
                   transition={{ duration: 0.8, ease: EASE, delay: 0.08 * i }}
                   style={{ display: 'block' }}
                 >
-                  <Link to={l.to} className="display d-lg">{l.label}</Link>
+                  <Link to={l.to} className="display d-lg">{t(l.key)}</Link>
                 </motion.span>
               </span>
             ))}
+            <div style={{ marginTop: 34 }}><LangSwitch /></div>
           </motion.div>
         )}
       </AnimatePresence>

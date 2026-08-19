@@ -5,6 +5,7 @@ import { PROPERTIES, fmtPrice } from '../data/properties';
 import { U } from '../data/images';
 import { EASE } from '../lib/anim';
 import { Lines } from '../components/Reveal';
+import { useI18n } from '../i18n';
 
 /**
  * The reel: vertical scroll drives the row sideways, and the row leans into the
@@ -12,6 +13,7 @@ import { Lines } from '../components/Reveal';
  * lands flush at both ends whatever the viewport.
  */
 export default function Reel() {
+  const { t, lang } = useI18n();
   const section = useRef(null);
   const track = useRef(null);
   const [travel, setTravel] = useState(0);
@@ -49,7 +51,7 @@ export default function Reel() {
       <div style={{ position: 'sticky', top: 0, height: '100svh', display: 'grid', alignContent: 'center', overflow: 'hidden' }}>
         <div className="shell" style={{ marginBottom: 'clamp(26px,4vh,54px)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 24, flexWrap: 'wrap' }}>
           <h2 className="display d-md" style={{ maxWidth: '14ch' }}>
-            <Lines lines={['Twelve homes,', 'end to end.']} />
+            <Lines lines={[t('reel.l1'), t('reel.l2')]} />
           </h2>
           <p className="meta eyebrow--tick">Keep scrolling</p>
         </div>
@@ -65,6 +67,7 @@ export default function Reel() {
 }
 
 function ReelItem({ p, i, expand }) {
+  const { lang } = useI18n();
   const img = useRef(null);
   return (
     <article className="reel-item" style={{ marginTop: i % 2 ? 'clamp(20px,5vh,64px)' : 0 }}>
@@ -87,7 +90,7 @@ function ReelItem({ p, i, expand }) {
           <p className="meta" style={{ margin: 0 }}>{p.hood}</p>
           <p className="meta num" style={{ margin: 0, color: 'var(--brass-lo)' }}>Nº {p.ref}</p>
         </div>
-        <p className="num" style={{ marginTop: 6, fontSize: 15 }}>{fmtPrice(p.price)}</p>
+        <p className="num" style={{ marginTop: 6, fontSize: 15 }}>{fmtPrice(p.price, lang)}</p>
       </button>
     </article>
   );

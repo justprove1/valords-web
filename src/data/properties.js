@@ -23,7 +23,7 @@ export const PROPERTIES = [
   {
     slug:'exceptional-villa-pedralbes', ref:'014', title:'Exceptional Villa',
     hood:'Pedralbes', hoodSlug:'pedralbes', type:'Villa',
-    price:6850000, size:680, beds:6, baths:5, plot:1450, year:1974, floor:'—',
+    price:2450000, size:380, beds:5, baths:4, plot:820, year:1974, floor:'—',
     coords:[41.3897,2.1141], orientation:'South-west',
     features:['Swimming pool','Garden','Parking','Home automation','Wine cellar','Fireplace'],
     cover:IMG.villaSea,
@@ -34,7 +34,7 @@ export const PROPERTIES = [
   {
     slug:'principal-passeig-de-gracia', ref:'021', title:'Principal Floor',
     hood:'Passeig de Gràcia', hoodSlug:'passeig-de-gracia', type:'Apartment',
-    price:8200000, size:410, beds:5, baths:4, plot:null, year:1908, floor:'Principal',
+    price:2300000, size:244, beds:4, baths:3, plot:null, year:1908, floor:'Principal',
     coords:[41.3925,2.1650], orientation:'East / West',
     features:['Private terrace','Period floors','Lift','Concierge','Fireplace'],
     cover:IMG.living1,
@@ -45,7 +45,7 @@ export const PROPERTIES = [
   {
     slug:'penthouse-turo-park', ref:'009', title:'Penthouse with Terrace',
     hood:'Turó Park', hoodSlug:'turo-park', type:'Penthouse',
-    price:4300000, size:265, beds:4, baths:3, plot:null, year:2019, floor:'8th',
+    price:1950000, size:210, beds:4, baths:3, plot:null, year:2019, floor:'8th',
     coords:[41.3932,2.1387], orientation:'South',
     features:['Private terrace','Swimming pool','Lift','Concierge','Parking','Home automation'],
     cover:IMG.livingView,
@@ -56,7 +56,7 @@ export const PROPERTIES = [
   {
     slug:'garden-house-sarria', ref:'032', title:'Garden House',
     hood:'Sarrià', hoodSlug:'sarria', type:'Townhouse',
-    price:3450000, size:390, beds:5, baths:4, plot:620, year:1931, floor:'—',
+    price:2150000, size:285, beds:4, baths:3, plot:380, year:1931, floor:'—',
     coords:[41.3991,2.1201], orientation:'South-east',
     features:['Garden','Fireplace','Parking','Period floors','Wine cellar'],
     cover:IMG.houseDusk,
@@ -67,7 +67,7 @@ export const PROPERTIES = [
   {
     slug:'loft-ciutat-vella', ref:'046', title:'Palace Loft',
     hood:'Ciutat Vella', hoodSlug:'ciutat-vella', type:'Loft',
-    price:1980000, size:210, beds:3, baths:2, plot:null, year:1640, floor:'1st',
+    price:1180000, size:165, beds:3, baths:2, plot:null, year:1640, floor:'1st',
     coords:[41.3838,2.1789], orientation:'North / South',
     features:['Period floors','Lift','Fireplace','Home automation'],
     cover:IMG.glass1,
@@ -78,7 +78,7 @@ export const PROPERTIES = [
   {
     slug:'corner-apartment-eixample', ref:'027', title:'Chamfer Apartment',
     hood:'Eixample', hoodSlug:'eixample', type:'Apartment',
-    price:2450000, size:238, beds:4, baths:3, plot:null, year:1924, floor:'4th',
+    price:1690000, size:205, beds:4, baths:3, plot:null, year:1924, floor:'4th',
     coords:[41.3942,2.1663], orientation:'South-west',
     features:['Period floors','Lift','Concierge','Parking','Private terrace'],
     cover:IMG.livingLite,
@@ -89,7 +89,7 @@ export const PROPERTIES = [
   {
     slug:'modern-villa-pedralbes', ref:'051', title:'House Among Pines',
     hood:'Pedralbes', hoodSlug:'pedralbes', type:'Villa',
-    price:5200000, size:520, beds:5, baths:5, plot:980, year:2021, floor:'—',
+    price:2500000, size:340, beds:5, baths:4, plot:700, year:2021, floor:'—',
     coords:[41.3876,2.1102], orientation:'South',
     features:['Swimming pool','Garden','Parking','Home automation','Gym','Sea views'],
     cover:IMG.villaWhite,
@@ -100,7 +100,7 @@ export const PROPERTIES = [
   {
     slug:'atelier-sarria', ref:'038', title:'The Atelier',
     hood:'Sarrià', hoodSlug:'sarria', type:'Loft',
-    price:1290000, size:175, beds:2, baths:2, plot:null, year:1955, floor:'Ground',
+    price:985000, size:152, beds:3, baths:2, plot:null, year:1955, floor:'Ground',
     coords:[41.4009,2.1235], orientation:'North',
     features:['Private terrace','Garden','Fireplace','Parking'],
     cover:IMG.facadeWood,
@@ -111,7 +111,7 @@ export const PROPERTIES = [
   {
     slug:'duplex-passeig-de-gracia', ref:'058', title:'Rooftop Duplex',
     hood:'Passeig de Gràcia', hoodSlug:'passeig-de-gracia', type:'Penthouse',
-    price:5900000, size:320, beds:4, baths:4, plot:null, year:1902, floor:'7th',
+    price:2280000, size:235, beds:4, baths:3, plot:null, year:1902, floor:'7th',
     coords:[41.3911,2.1638], orientation:'West',
     features:['Private terrace','Swimming pool','Lift','Concierge','Sea views','Home automation'],
     cover:IMG.minimal,
@@ -122,7 +122,7 @@ export const PROPERTIES = [
   {
     slug:'courtyard-house-ciutat-vella', ref:'062', title:'Courtyard House',
     hood:'Ciutat Vella', hoodSlug:'ciutat-vella', type:'Townhouse',
-    price:2750000, size:295, beds:4, baths:3, plot:180, year:1780, floor:'—',
+    price:1750000, size:240, beds:4, baths:3, plot:120, year:1780, floor:'—',
     coords:[41.3812,2.1755], orientation:'East',
     features:['Private terrace','Garden','Period floors','Fireplace','Wine cellar'],
     cover:IMG.stair,
@@ -133,7 +133,7 @@ export const PROPERTIES = [
   {
     slug:'galvany-apartment', ref:'071', title:'Galvany Apartment',
     hood:'Turó Park', hoodSlug:'turo-park', type:'Apartment',
-    price:1650000, size:186, beds:4, baths:3, plot:null, year:1968, floor:'5th',
+    price:1290000, size:178, beds:3, baths:2, plot:null, year:1968, floor:'5th',
     coords:[41.3948,2.1421], orientation:'South-east',
     features:['Private terrace','Lift','Concierge','Parking'],
     cover:IMG.dining,
@@ -144,7 +144,7 @@ export const PROPERTIES = [
   {
     slug:'gallery-flat-eixample', ref:'084', title:'Gallery Flat',
     hood:'Eixample', hoodSlug:'eixample', type:'Apartment',
-    price:1150000, size:142, beds:3, baths:2, plot:null, year:1919, floor:'2nd',
+    price:870000, size:138, beds:3, baths:2, plot:null, year:1919, floor:'2nd',
     coords:[41.3903,2.1601], orientation:'South',
     features:['Period floors','Lift','Private terrace'],
     cover:IMG.living2,
@@ -155,5 +155,12 @@ export const PROPERTIES = [
 ];
 
 export const byslug = (s) => PROPERTIES.find((p) => p.slug === s);
-export const fmtPrice = (n) =>
-  '€' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+/* Spanish, Catalan and French all write 2.450.000 € with the symbol trailing;
+   only English puts it in front. Intl knows this — hardcoding en-US printed
+   Anglo-Saxon money at a Barcelona agency. */
+const MONEY_LOCALE = { es: 'es-ES', ca: 'ca-ES', en: 'en-IE', fr: 'fr-FR' };
+
+export const fmtPrice = (n, lang = 'es') =>
+  new Intl.NumberFormat(MONEY_LOCALE[lang] ?? 'es-ES', {
+    style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
+  }).format(n);

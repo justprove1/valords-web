@@ -6,6 +6,7 @@ import { U } from '../data/images';
 import { EASE } from '../lib/anim';
 import Magnetic from '../components/Magnetic';
 import Slats from '../lib/Slats';
+import { useI18n } from '../i18n';
 
 const P = PROPERTIES[0];
 
@@ -24,6 +25,7 @@ const P = PROPERTIES[0];
  * twice reads as a language; two different ideas read as decoration.
  */
 export default function Interior() {
+  const { t, lang } = useI18n();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
 
@@ -34,10 +36,10 @@ export default function Interior() {
   const copyY = useTransform(scrollYProgress, [0, 1], [60, -60]);
 
   const spec = [
-    [`${P.size}`, 'm² built'],
-    [P.plot ? `${P.plot}` : P.floor, P.plot ? 'm² plot' : 'floor'],
-    [`${P.year}`, 'built'],
-    [`${P.beds}`, 'bedrooms'],
+    [`${P.size}`, t('feature.built')],
+    [P.plot ? `${P.plot}` : P.floor, P.plot ? t('feature.plot') : t('feature.floor')],
+    [`${P.year}`, t('feature.year')],
+    [`${P.beds}`, t('feature.beds')],
   ];
 
   return (
@@ -81,15 +83,15 @@ export default function Interior() {
           </ul>
 
           <p className="num" style={{ marginTop: 24, fontSize: 15, letterSpacing: '.04em' }}>
-            {fmtPrice(P.price)}
+            {fmtPrice(P.price, lang)}
           </p>
           <Magnetic style={{ marginTop: 32 }}>
-            <Link to={`/property/${P.slug}`} className="btn btn--light">Open the file</Link>
+            <Link to={`/property/${P.slug}`} className="btn btn--light">{t('feature.open')}</Link>
           </Magnetic>
         </motion.div>
       </motion.div>
 
-      <p className="feature-note meta">Photography placeholder</p>
+      <p className="feature-note meta">{t('feature.placeholder')}</p>
     </section>
   );
 }

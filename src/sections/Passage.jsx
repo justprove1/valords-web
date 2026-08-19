@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { U, IMG } from '../data/images';
 import { Lines } from '../components/Reveal';
+import { useT } from '../i18n';
 
 /**
  * The cinematic passage: the city closes in, becomes a framed image,
@@ -9,6 +10,7 @@ import { Lines } from '../components/Reveal';
  */
 export default function Passage() {
   const ref = useRef(null);
+  const t = useT();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
 
   const [maxInset, setMaxInset] = useState('13%');
@@ -41,7 +43,7 @@ export default function Passage() {
           >
             <p className="eyebrow" style={{ color: 'rgba(246,244,239,.7)' }}>Barcelona</p>
             <h2 className="display d-lg" style={{ marginTop: 22, maxWidth: '15ch' }}>
-              <Lines lines={['Six neighbourhoods.', 'One city that keeps', 'its best addresses quiet.']} />
+              <Lines lines={[t('passage.l1'), t('passage.l2'), t('passage.l3')]} />
             </h2>
           </motion.div>
         </div>

@@ -6,6 +6,7 @@ import { U } from '../data/images';
 import { EASE } from '../lib/anim';
 import { Lines } from '../components/Reveal';
 import Magnetic from '../components/Magnetic';
+import { useT } from '../i18n';
 
 /* A schematic of the city, not a survey: the sea, the ridge, the Diagonal and
    the six addresses, projected from their real coordinates so the relative
@@ -35,6 +36,7 @@ const DIAGONAL = [pt([41.3840, 2.1120]), pt([41.4050, 2.2000])];
 const line = (pts) => pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
 
 export default function MapSection() {
+  const t = useT();
   const [active, setActive] = useState('turo-park');
   const hood = NEIGHBOURHOODS.find((n) => n.slug === active) ?? NEIGHBOURHOODS[0];
   const homes = PROPERTIES.filter((p) => p.hoodSlug === active);
@@ -45,7 +47,7 @@ export default function MapSection() {
         <header style={{ marginBottom: 'clamp(40px,6vh,80px)' }}>
           <p className="eyebrow eyebrow--tick" style={{ color: 'rgba(246,244,239,.62)' }}>The upper city, mapped</p>
           <h2 className="display d-lg" style={{ marginTop: 22, maxWidth: '16ch' }}>
-            <Lines lines={['Between the ridge', 'and the water.']} />
+            <Lines lines={[t('map.l1'), t('map.l2')]} />
           </h2>
         </header>
 

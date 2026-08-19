@@ -4,16 +4,20 @@ import { U, IMG } from '../data/images';
 import { EASE, EASE_CINE } from '../lib/anim';
 import Slats from '../lib/Slats';
 import Chars from '../components/Chars';
+import { useT } from '../i18n';
 
 /* Read left to right: the grid from above, then the architecture that fills it,
    then the light inside it. Ordered so the tonal weight sits at the edges and
    the quietest frames fall behind the title. */
+/* No monuments. An agency selling Pedralbes and Sant Gervasi is not selling
+   the postcard, and a local reads Park Güell in a band instantly. */
 const HERO_BANDS = [
   IMG.lines, IMG.bcnAerial, IMG.facadeWhite, IMG.minimal,
-  IMG.glass1, IMG.bcnGaudi, IMG.stair,
+  IMG.glass1, IMG.facadeDark, IMG.stair,
 ];
 
 export default function Hero() {
+  const t = useT();
   const ref = useRef(null);
   /* Once the section is pinned its own rect stops moving, so an element-based
      measurement would freeze at zero and the three planes would never travel.
@@ -69,7 +73,7 @@ export default function Hero() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1.4, ease: EASE, delay: 0.9 }}
         >
-          Remarkable realty · Est. 2016
+          {t('hero.eyebrow')}
         </motion.p>
 
         <Chars
@@ -96,7 +100,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.4, ease: EASE, delay: 1.1 }}
         >
-          Exceptional homes.<br />Exceptional places.
+          {t('hero.line1')}<br />{t('hero.line2')}
         </motion.p>
       </motion.div>
 
@@ -104,9 +108,9 @@ export default function Hero() {
         className="shell"
         style={{ position: 'absolute', left: 0, right: 0, bottom: 34, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', color: 'rgba(246,244,239,.72)', opacity: fade, y: footY, pointerEvents: 'none' }}
       >
-        <p className="meta" style={{ color: 'inherit', margin: 0 }}>Office · 41.3940° N · 2.1400° E — Turó Park</p>
+        <p className="meta" style={{ color: 'inherit', margin: 0 }}>{t('hero.office')} · 41.3940° N · 2.1400° E — Turó Park</p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <span className="meta" style={{ color: 'inherit' }}>Scroll</span>
+          <span className="meta" style={{ color: 'inherit' }}>{t('hero.scroll')}</span>
           <motion.span
             style={{ width: 1, height: 46, background: 'var(--brass)', transformOrigin: 'top' }}
             animate={{ scaleY: [0, 1, 1, 0], opacity: [0, 1, 1, 0] }}

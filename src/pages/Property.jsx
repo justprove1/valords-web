@@ -6,8 +6,10 @@ import { U } from '../data/images';
 import { Lines, FadeUp, RevealImage } from '../components/Reveal';
 import { EASE } from '../lib/anim';
 import ShaderImage from '../lib/ShaderImage';
+import { useI18n } from '../i18n';
 
 export default function Property() {
+  const { t, lang } = useI18n();
   const { slug } = useParams();
   const p = byslug(slug);
   const navigate = useNavigate();
@@ -33,7 +35,7 @@ export default function Property() {
   const mapSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - d}%2C${lat - d / 1.6}%2C${lng + d}%2C${lat + d / 1.6}&layer=mapnik&marker=${lat}%2C${lng}`;
 
   const facts = [
-    ['Price', fmtPrice(p.price)],
+    ['Price', fmtPrice(p.price, lang)],
     ['Surface', `${p.size} m²`],
     ['Bedrooms', p.beds],
     ['Bathrooms', p.baths],
@@ -63,7 +65,7 @@ export default function Property() {
           </motion.h1>
           <motion.p className="num" style={{ marginTop: 16, fontSize: 17 }}
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2, delay: 0.8 }}>
-            {fmtPrice(p.price)} · {p.size} m² · {p.beds} bedrooms · {p.baths} baths
+            {fmtPrice(p.price, lang)} · {p.size} m² · {p.beds} {t('feature.beds')} · {p.baths} {t('feature.baths')}
           </motion.p>
         </motion.div>
       </section>
@@ -178,7 +180,7 @@ export default function Property() {
             <div>
               <p className="eyebrow">Next</p>
               <p className="display d-md" style={{ marginTop: 12 }}>{next.title}</p>
-              <p className="meta num" style={{ marginTop: 10 }}>{next.hood} · {fmtPrice(next.price)}</p>
+              <p className="meta num" style={{ marginTop: 10 }}>{next.hood} · {fmtPrice(next.price, lang)}</p>
             </div>
             <div style={{ width: 'min(320px,42vw)', aspectRatio: '4/3', overflow: 'hidden' }}>
               <img src={U(next.cover, 900)} alt="" className="img-cover" loading="lazy" />

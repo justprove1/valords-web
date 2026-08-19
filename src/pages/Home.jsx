@@ -12,8 +12,10 @@ import PhotoType from '../sections/PhotoType';
 import Marquee from '../components/Marquee';
 import { Lines, FadeUp } from '../components/Reveal';
 import { NEIGHBOURHOODS } from '../data/properties';
+import { useT } from '../i18n';
 
 export default function Home() {
+  const t = useT();
   return (
     <>
       {/* the city pins and the house rides up over it, so the two opening
@@ -25,15 +27,15 @@ export default function Home() {
 
       <section className="shell" style={{ paddingBlock: 'clamp(90px,15vh,200px)' }}>
         <div className="intro-grid">
-          <p className="eyebrow eyebrow--tick">Valords, Barcelona</p>
+          <p className="eyebrow eyebrow--tick">{t('intro.eyebrow')}</p>
           <div>
             <h2 className="display d-md" style={{ maxWidth: '20ch' }}>
-              <Lines lines={['We represent a small number', 'of houses and apartments', 'in the upper city — and', 'we know each one by name.']} />
+              <Lines lines={[t('intro.l1'), t('intro.l2'), t('intro.l3'), t('intro.l4')]} />
             </h2>
             <FadeUp i={2}>
               <hr className="hair" style={{ marginTop: 34, maxWidth: 260 }} />
               <p className="lead" style={{ marginTop: 26, maxWidth: '46ch', color: 'var(--warm)' }}>
-                Founded in 2016 beside Turó Park. Buying, selling and letting exceptional homes in Barcelona, the Costa Brava and the Maresme, with legal and tax counsel under the same roof.
+                {t('intro.body')}
               </p>
             </FadeUp>
           </div>
