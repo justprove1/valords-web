@@ -11,6 +11,9 @@ export default function Cursor() {
 
   useEffect(() => {
     if (window.matchMedia('(pointer: coarse)').matches) return;
+    /* the system pointer is only hidden once we are certainly drawing our own,
+       so a script failure never leaves the visitor with no cursor at all */
+    document.documentElement.classList.add('has-cursor');
     const move = (e) => {
       x.set(e.clientX);
       y.set(e.clientY);
@@ -20,7 +23,10 @@ export default function Cursor() {
       setOpen(Boolean(t || link));
     };
     window.addEventListener('mousemove', move, { passive: true });
-    return () => window.removeEventListener('mousemove', move);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.documentElement.classList.remove('has-cursor');
+    };
   }, [x, y]);
 
   return (

@@ -121,10 +121,19 @@ html.lenis,html.lenis body{height:auto}
 .btn--light:hover{color:var(--ink);border-color:var(--paper)}
 
 /* ── cursor ─────────────────────────────────────────────────────── */
+/* the system pointer goes only while ours is actually being drawn — the class
+   is added by <Cursor> itself. Typing still needs a caret to aim with. */
+.has-cursor,.has-cursor a,.has-cursor button,.has-cursor [role="button"],
+.has-cursor summary,.has-cursor select,.has-cursor select.field,
+.has-cursor .map-pin,.has-cursor label{cursor:none}
+.has-cursor input,.has-cursor textarea{cursor:auto}
+
 .cursor{
   position:fixed;top:0;left:0;z-index:9000;pointer-events:none;
-  width:7px;height:7px;border-radius:50%;background:var(--ink);
-  mix-blend-mode:difference;filter:invert(1);
+  width:8px;height:8px;border-radius:50%;background:#fff;
+  /* difference against the backdrop: legible on the dark hero and on paper,
+     without the invert() that was fighting the blend and washing it out */
+  mix-blend-mode:difference;
 }
 .cursor-ring{
   position:fixed;top:0;left:0;z-index:8999;pointer-events:none;
