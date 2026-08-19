@@ -11,6 +11,11 @@ export default function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '14%']);
   const dim = useTransform(scrollYProgress, [0, 1], [0, 0.5]);
   const fade = useTransform(scrollYProgress, [0, 0.55], [1, 0]);
+  /* three planes at three speeds: the photograph lags behind the scroll, the
+     title runs ahead of it, the footing runs ahead a little less. Depth comes
+     from the difference between them, not from the movement itself. */
+  const titleY = useTransform(scrollYProgress, [0, 1], [0, -130]);
+  const footY = useTransform(scrollYProgress, [0, 1], [0, -54]);
 
   return (
     <section ref={ref} style={{ height: '100svh', position: 'relative', overflow: 'hidden', background: 'var(--deep)' }}>
@@ -28,7 +33,7 @@ export default function Hero() {
       </motion.div>
 
       <motion.div
-        style={{ position: 'relative', height: '100%', display: 'grid', alignContent: 'center', color: 'var(--paper)', opacity: fade, pointerEvents: 'none' }}
+        style={{ position: 'relative', height: '100%', display: 'grid', alignContent: 'center', color: 'var(--paper)', opacity: fade, y: titleY, pointerEvents: 'none' }}
         className="shell"
       >
         <motion.p
@@ -76,7 +81,7 @@ export default function Hero() {
 
       <motion.div
         className="shell"
-        style={{ position: 'absolute', left: 0, right: 0, bottom: 34, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', color: 'rgba(246,244,239,.72)', opacity: fade, pointerEvents: 'none' }}
+        style={{ position: 'absolute', left: 0, right: 0, bottom: 34, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', color: 'rgba(246,244,239,.72)', opacity: fade, y: footY, pointerEvents: 'none' }}
       >
         <p className="meta" style={{ color: 'inherit', margin: 0 }}>Office · 41.3940° N · 2.1400° E — Turó Park</p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>

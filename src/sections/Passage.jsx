@@ -31,7 +31,7 @@ export default function Passage() {
       <div style={{ height: '190vh', position: 'relative' }}>
         <div style={{ position: 'sticky', top: 0, height: '100svh', overflow: 'hidden' }}>
           <motion.div style={{ position: 'absolute', inset: 0, clipPath: clip }}>
-            <motion.img src={U(IMG.bcnHill, 2400, 74)} alt="Above Sarrià" className="img-cover" style={{ scale }} />
+            <motion.img src={U(IMG.bcnHill, 2400, 74)} alt="The Temple del Sagrat Cor on Tibidabo, above the city" className="img-cover" style={{ scale }} />
             <motion.div style={{ position: 'absolute', inset: 0, background: 'var(--deep)', opacity: veil }} />
           </motion.div>
 
