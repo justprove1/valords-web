@@ -57,6 +57,8 @@ export const DICT = {
     'map.l1': 'Entre la sierra',
     'map.l2': 'y el agua.',
     'map.eyebrow': 'La ciudad alta, cartografiada',
+    'map.homes': 'viviendas',
+    'map.see': 'Ver',
 
     'collection.l1': 'La colección',
     'collection.l2': 'de Barcelona',
@@ -132,6 +134,8 @@ export const DICT = {
     'map.l1': 'Entre la serra',
     'map.l2': "i l'aigua.",
     'map.eyebrow': 'La ciutat alta, cartografiada',
+    'map.homes': 'habitatges',
+    'map.see': 'Veure',
 
     'collection.l1': 'La col·lecció',
     'collection.l2': 'de Barcelona',
@@ -207,6 +211,8 @@ export const DICT = {
     'map.l1': 'Between the ridge',
     'map.l2': 'and the water.',
     'map.eyebrow': 'The upper city, mapped',
+    'map.homes': 'homes',
+    'map.see': 'See',
 
     'collection.l1': 'The Barcelona',
     'collection.l2': 'Collection',
@@ -282,6 +288,8 @@ export const DICT = {
     'map.l1': 'Entre la crête',
     'map.l2': "et l'eau.",
     'map.eyebrow': 'Les hauteurs, cartographiées',
+    'map.homes': 'biens',
+    'map.see': 'Voir',
 
     'collection.l1': 'La collection',
     'collection.l2': 'de Barcelone',
